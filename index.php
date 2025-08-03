@@ -838,7 +838,7 @@ $stats = $app->getDashboardStats();
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="logo">
-                <h1><i class="fas fa-graduation-cap"></i> SMA Assessment</h1>
+                <h1><i class="fas fa-graduation-cap"></i> PPI AMF Abdul Malik Fadjar</h1>
                 <p>Sistem Penilaian Digital</p>
             </div>
             <ul class="nav-menu">
