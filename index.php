@@ -157,8 +157,10 @@ class Database {
 class SMAAssessmentApp {
     private $db;
     private $conn;
+    private $config;
     
-    public function __construct() {
+    public function __construct($config) {
+        $this->config = $config;
         $this->db = new Database();
         $this->conn = $this->db->getConnection();
     }
@@ -397,7 +399,8 @@ class SMAAssessmentApp {
 }
 
 // Initialize the application
-$app = new SMAAssessmentApp();
+$config = [];
+$app = new SMAAssessmentApp($config);
 
 // Handle AJAX requests
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
