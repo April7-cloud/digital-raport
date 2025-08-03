@@ -1,157 +1,55 @@
 <?php
 session_start();
 
+// Load configuration
+$config = require __DIR__ . '/config.php';
+
 // Database configuration
 class Database {
-    private $host = 'localhost';
-    private $username = 'root';
-    private $password = '';
-    private $database = 'sma_assessment';
+    private $host;
+    private $username;
+    private $password;
+    private $database;
+    private $charset;
+    private $options;
     private $connection;
     
-    public function __construct() {
+    public function __construct($config) {
+        $this->host = $config['db']['host'];
+        $this->username = $config['db']['username'];
+        $this->password = $config['db']['password'];
+        $this->database = $config['db']['database'];
+        $this->charset = $config['db']['charset'];
+        $this->options = $config['db']['options'];
         $this->connect();
-        $this->createTables();
     }
     
     private function connect() {
         try {
-            $this->connection = new PDO("mysql:host={$this->host};dbname={$this->database}", 
-                                      $this->username, $this->password);
-            $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $dsn = "mysql:host={$this->host};dbname={$this->database};charset={$this->charset}";
+            $this->connection = new PDO($dsn, $this->username, $this->password, $this->options);
         } catch(PDOException $e) {
             // Create database if not exists
             try {
-                $this->connection = new PDO("mysql:host={$this->host}", $this->username, $this->password);
-                $this->connection->exec("CREATE DATABASE IF NOT EXISTS {$this->database}");
-                $this->connection->exec("USE {$this->database}");
+                $this->connection = new PDO(
+                    "mysql:host={$this->host}", 
+                    $this->username, 
+                    $this->password,
+                    $this->options
+                );
+                $this->connection->exec("CREATE DATABASE IF NOT EXISTS `{$this->database}` CHARACTER SET {$this->charset} COLLATE {$this->charset}_unicode_ci");
+                $this->connection->exec("USE `{$this->database}`");
             } catch(PDOException $e) {
                 die("Connection failed: " . $e->getMessage());
             }
         }
     }
-    
-    private function createTables() {
-        $tables = [
-            "CREATE TABLE IF NOT EXISTS students (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                nis VARCHAR(20) UNIQUE NOT NULL,
-                name VARCHAR(100) NOT NULL,
-                class VARCHAR(20) NOT NULL,
-                semester VARCHAR(20) NOT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )",
-            "CREATE TABLE IF NOT EXISTS subjects (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                name VARCHAR(100) NOT NULL,
-                code VARCHAR(10) NOT NULL,
-                teacher VARCHAR(100) NOT NULL,
-                kkm INT DEFAULT 75,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )",
-            "CREATE TABLE IF NOT EXISTS assessments (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                student_id INT NOT NULL,
-                subject_id INT NOT NULL,
-                type ENUM('UH', 'UTS', 'UAS', 'Tugas') NOT NULL,
-                score INT NOT NULL,
-                date DATE NOT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
-                FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE
-            )"
-        ];
-        
-        foreach ($tables as $table) {
-            try {
-                $this->connection->exec($table);
-            } catch(PDOException $e) {
-                // Table might already exist, continue
-            }
-        }
-        
-        // Insert sample data if tables are empty
-        $this->insertSampleData();
-    }
-    
-    private function insertSampleData() {
-        try {
-            // Check if data exists
-            $stmt = $this->connection->query("SELECT COUNT(*) FROM students");
-            if ($stmt->fetchColumn() == 0) {
-                // Insert sample students
-                $students = [
-                    ['2024001', 'Ahmad Rizki Pratama', 'XII IPA 1', 'Ganjil'],
-                    ['2024002', 'Siti Nurhaliza Dewi', 'XII IPA 1', 'Ganjil'],
-                    ['2024003', 'Budi Santoso Wijaya', 'XII IPS 1', 'Ganjil'],
-                    ['2024004', 'Dewi Lestari Sari', 'XII IPA 2', 'Ganjil'],
-                    ['2024005', 'Andi Pratama Putra', 'XII IPS 2', 'Ganjil'],
-                    ['2024006', 'Maya Indira Sari', 'XII IPA 1', 'Ganjil'],
-                    ['2024007', 'Rudi Hartono', 'XII IPS 1', 'Ganjil']
-                ];
-                
-                $stmt = $this->connection->prepare("INSERT INTO students (nis, name, class, semester) VALUES (?, ?, ?, ?)");
-                foreach ($students as $student) {
-                    $stmt->execute($student);
-                }
-                
-                // Insert sample subjects
-                $subjects = [
-                    ['Matematika', 'MAT', 'Pak Andi Susanto', 75],
-                    ['Bahasa Indonesia', 'BIN', 'Bu Sari Dewi', 75],
-                    ['Fisika', 'FIS', 'Pak Joko Widodo', 75],
-                    ['Kimia', 'KIM', 'Bu Ratna Sari', 75],
-                    ['Biologi', 'BIO', 'Bu Maya Indra', 75],
-                    ['Sejarah', 'SEJ', 'Pak Bambang Riyadi', 75],
-                    ['Geografi', 'GEO', 'Bu Sinta Wulandari', 75],
-                    ['Ekonomi', 'EKO', 'Pak Hendra Gunawan', 75]
-                ];
-                
-                $stmt = $this->connection->prepare("INSERT INTO subjects (name, code, teacher, kkm) VALUES (?, ?, ?, ?)");
-                foreach ($subjects as $subject) {
-                    $stmt->execute($subject);
-                }
-                
-                // Insert sample assessments
-                $assessments = [
-                    [1, 1, 'UH', 85, '2024-07-15'],
-                    [1, 2, 'UTS', 78, '2024-07-10'],
-                    [1, 3, 'UH', 82, '2024-07-12'],
-                    [1, 4, 'Tugas', 88, '2024-07-08'],
-                    [2, 1, 'UH', 92, '2024-07-15'],
-                    [2, 2, 'UTS', 88, '2024-07-10'],
-                    [2, 3, 'UH', 89, '2024-07-12'],
-                    [2, 4, 'Tugas', 95, '2024-07-08'],
-                    [3, 1, 'UH', 75, '2024-07-15'],
-                    [3, 2, 'UTS', 72, '2024-07-10'],
-                    [3, 6, 'UH', 80, '2024-07-14'],
-                    [3, 7, 'Tugas', 85, '2024-07-09'],
-                    [4, 1, 'UH', 88, '2024-07-15'],
-                    [4, 3, 'UTS', 84, '2024-07-11'],
-                    [4, 4, 'UH', 90, '2024-07-13'],
-                    [5, 6, 'UTS', 91, '2024-07-10'],
-                    [5, 7, 'UH', 87, '2024-07-16'],
-                    [5, 8, 'Tugas', 92, '2024-07-07'],
-                    [6, 1, 'UH', 79, '2024-07-15'],
-                    [6, 2, 'UTS', 83, '2024-07-10'],
-                    [7, 6, 'UH', 77, '2024-07-14'],
-                    [7, 8, 'UTS', 81, '2024-07-11']
-                ];
-                
-                $stmt = $this->connection->prepare("INSERT INTO assessments (student_id, subject_id, type, score, date) VALUES (?, ?, ?, ?, ?)");
-                foreach ($assessments as $assessment) {
-                    $stmt->execute($assessment);
-                }
-            }
-        } catch(PDOException $e) {
-            // Sample data insertion failed, continue without sample data
-        }
-    }
-    
+
     public function getConnection() {
         return $this->connection;
     }
 }
+
 
 // Main Application Class
 class SMAAssessmentApp {
@@ -161,7 +59,7 @@ class SMAAssessmentApp {
     
     public function __construct($config) {
         $this->config = $config;
-        $this->db = new Database();
+        $this->db = new Database($config);
         $this->conn = $this->db->getConnection();
     }
     
@@ -399,7 +297,7 @@ class SMAAssessmentApp {
 }
 
 // Initialize the application
-$config = [];
+$config = require __DIR__ . '/config.php';
 $app = new SMAAssessmentApp($config);
 
 // Handle AJAX requests
