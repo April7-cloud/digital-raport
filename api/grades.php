@@ -90,9 +90,7 @@ function handleSaveGrades($db, &$response) {
             ON DUPLICATE KEY UPDATE 
                 grade = VALUES(grade),
                 note = VALUES(note),
-                updated_at = CURRENT_TIMESTAMP
-        
-```php
+                updated_at = CURRENT_TIMESTAMP");
         
         $successCount = 0;
         $subjectId = null;
@@ -160,9 +158,8 @@ function handleGetGrades($db, &$response) {
             FROM grades g
             JOIN students s ON g.student_id = s.id
             WHERE g.subject_id = ?
-            ORDER BY s.full_name ASC
+            ORDER BY s.full_name ASC");
         
-```php
         $stmt->execute([$subjectId]);
         $grades = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
