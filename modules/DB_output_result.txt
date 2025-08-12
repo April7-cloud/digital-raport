@@ -1,0 +1,172 @@
+InnoDB |      |
+=====================================
+2025-08-06 19:12:56 0x6238 INNODB MONITOR OUTPUT
+=====================================
+Per second averages calculated from the last 18 seconds
+-----------------
+BACKGROUND THREAD
+-----------------
+srv_master_thread loops: 1 srv_active, 0 srv_shutdown, 2964 srv_idle
+srv_master_thread log flush and writes: 2965
+----------
+SEMAPHORES
+----------
+OS WAIT ARRAY INFO: reservation count 69
+OS WAIT ARRAY INFO: signal count 18
+RW-shared spins 8, rounds 249, OS waits 8
+RW-excl spins 21, rounds 57, OS waits 0
+RW-sx spins 0, rounds 0, OS waits 0
+Spin rounds per wait: 31.12 RW-shared, 2.71 RW-excl, 0.00 RW-sx
+------------------------
+LATEST FOREIGN KEY ERROR
+------------------------
+2025-08-06 18:23:52 0x519c Transaction:
+TRANSACTION 4765, ACTIVE 0 sec inserting
+mysql tables in use 1, locked 1
+3 lock struct(s), heap size 1128, 1 row lock(s), undo log entries 1
+MySQL thread id 19, OS thread handle 20892, query id 18 localhost ::1 root Update
+INSERT INTO subjects (code, name, description, teacher_id, class, kkm, academic_year) VALUES ('MTK', 'matematika', 'snakldkajbflansla', '1', 'X IPA 1', '70', '2025/2026')
+Foreign key constraint fails for table `digital_raport`.`subjects`:
+,
+  CONSTRAINT `fk_subjects_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE in parent table, in index fk_subjects_teacher tuple:
+DATA TUPLE: 2 fields;
+ 0: len 4; hex 80000001; asc     ;;
+ 1: len 4; hex 80000005; asc     ;;
+
+But in parent table `digital_raport`.`users`, in index PRIMARY,
+the closest match we can find is record:
+PHYSICAL RECORD: n_fields 16; compact format; info bits 0
+ 0: len 4; hex 80000002; asc     ;;
+ 1: len 6; hex 000000000000; asc       ;;
+ 2: len 7; hex 80000000000000; asc        ;;
+ 3: len 5; hex 61646d696e; asc admin;;
+ 4: len 17; hex 61646d696e406578616d706c652e636f6d; asc admin@example.com;;
+ 5: len 30; hex 2432792431302437574a2f41656546625a4276644e584a31727441352e2e; asc $2y$10$7WJ/AeeFbZBvdNXJ1rtA5..; (total 60 bytes);
+ 6: len 13; hex 41646d696e6973747261746f72; asc Administrator;;
+ 7: len 1; hex 81; asc  ;;
+ 8: len 1; hex 80; asc  ;;
+ 9: len 5; hex 99b74d0689; asc   M  ;;
+ 10: len 3; hex 3a3a31; asc ::1;;
+ 11: len 4; hex 80000000; asc     ;;
+ 12: SQL NULL;
+ 13: len 4; hex 6892fa31; asc h  1;;
+ 14: len 4; hex 68931fb1; asc h   ;;
+ 15: len 1; hex 01; asc  ;;
+
+------------
+TRANSACTIONS
+------------
+Trx id counter 4778
+Purge done for trx's n:o < 4767 undo n:o < 0 state: running
+History list length 11
+LIST OF TRANSACTIONS FOR EACH SESSION:
+---TRANSACTION 283216170181040, not started
+0 lock struct(s), heap size 1128, 0 row lock(s)
+---TRANSACTION 283216170176872, not started
+0 lock struct(s), heap size 1128, 0 row lock(s)
+---TRANSACTION 283216170172704, not started
+0 lock struct(s), heap size 1128, 0 row lock(s)
+---TRANSACTION 283216170168536, not started
+0 lock struct(s), heap size 1128, 0 row lock(s)
+---TRANSACTION 283216170164368, not started
+0 lock struct(s), heap size 1128, 0 row lock(s)
+--------
+FILE I/O
+--------
+I/O thread 0 state: native aio handle (insert buffer thread)
+I/O thread 1 state: native aio handle (log thread)
+I/O thread 2 state: native aio handle (read thread)
+I/O thread 3 state: native aio handle (read thread)
+I/O thread 4 state: native aio handle (read thread)
+I/O thread 5 state: native aio handle (read thread)
+I/O thread 6 state: native aio handle (write thread)
+I/O thread 7 state: native aio handle (write thread)
+I/O thread 8 state: native aio handle (write thread)
+I/O thread 9 state: native aio handle (write thread)
+Pending normal aio reads: [0, 0, 0, 0] , aio writes: [0, 0, 0, 0] ,
+ ibuf aio reads:, log i/o's:, sync i/o's:
+Pending flushes (fsync) log: 0; buffer pool: 0
+402 OS file reads, 146 OS file writes, 13 OS fsyncs
+0.00 reads/s, 0 avg bytes/read, 0.00 writes/s, 0.00 fsyncs/s
+-------------------------------------
+INSERT BUFFER AND ADAPTIVE HASH INDEX
+-------------------------------------
+Ibuf: size 1, free list len 0, seg size 2, 0 merges
+merged operations:
+ insert 0, delete mark 0, delete 0
+discarded operations:
+ insert 0, delete mark 0, delete 0
+Hash table size 4441, node heap has 0 buffer(s)
+Hash table size 4441, node heap has 0 buffer(s)
+Hash table size 4441, node heap has 0 buffer(s)
+Hash table size 4441, node heap has 0 buffer(s)
+Hash table size 4441, node heap has 0 buffer(s)
+Hash table size 4441, node heap has 0 buffer(s)
+Hash table size 4441, node heap has 0 buffer(s)
+Hash table size 4441, node heap has 2 buffer(s)
+0.00 hash searches/s, 0.00 non-hash searches/s
+---
+LOG
+---
+Log sequence number 12297021
+Log flushed up to   12297021
+Pages flushed up to 12297021
+Last checkpoint at  12297012
+0 pending log flushes, 0 pending chkp writes
+16 log i/o's done, 0.00 log i/o's/second
+----------------------
+BUFFER POOL AND MEMORY
+----------------------
+Total large memory allocated 33554432
+Dictionary memory allocated 62600
+Buffer pool size   1003
+Free buffers       710
+Database pages     291
+Old database pages 0
+Modified db pages  0
+Percent of dirty pages(LRU & free pages): 0.000
+Max dirty pages percent: 75.000
+Pending reads 0
+Pending writes: LRU 0, flush list 0, single page 0
+Pages made young 0, not young 0
+0.00 youngs/s, 0.00 non-youngs/s
+Pages read 372, created 131, written 135
+0.00 reads/s, 0.00 creates/s, 0.00 writes/s
+No buffer pool page gets since the last printout
+Pages read ahead 0.00/s, evicted without access 0.00/s, Random read ahead 0.00/s
+LRU len: 291, unzip_LRU len: 0
+I/O sum[0]:cur[0], unzip sum[0]:cur[0]
+--------------
+ROW OPERATIONS
+--------------
+0 queries inside InnoDB, 0 queries in queue
+0 read views open inside InnoDB
+Process ID=7408, Main thread ID=18864, state: sleeping
+Number of rows inserted 0, updated 0, deleted 0, read 183
+0.00 inserts/s, 0.00 updates/s, 0.00 deletes/s, 0.00 reads/s
+Number of system rows inserted 0, updated 0, deleted 0, read 0
+0.00 inserts/s, 0.00 updates/s, 0.00 deletes/s, 0.00 reads/s
+
+
+MariaDB [digital_raport]> DESCRIBE teachers;
++------------+-----------------------+------+-----+---------------------+-------------------------------+
+| Field      | Type                  | Null | Key | Default             | Extra                         |
++------------+-----------------------+------+-----+---------------------+-------------------------------+
+| id         | int(11)               | NO   | PRI | NULL                | auto_increment                |
+| nip        | varchar(20)           | NO   | UNI | NULL                |                               |
+| name       | varchar(100)          | NO   |     | NULL                |                               |
+| email      | varchar(100)          | YES  | UNI | NULL                |                               |
+| phone      | varchar(15)           | YES  |     | NULL                |                               |
+| address    | text                  | YES  |     | NULL                |                               |
+| gender     | enum('male','female') | YES  |     | NULL                |                               |
+| photo      | varchar(255)          | YES  |     | NULL                |                               |
+| is_active  | tinyint(1)            | NO   |     | 1                   |                               |
+| created_at | timestamp             | NO   |     | current_timestamp() |                               |
+| updated_at | timestamp             | NO   |     | current_timestamp() | on update current_timestamp() |
+| user_id    | int(11)               | YES  | MUL | NULL                |                               |
++------------+-----------------------+------+-----+---------------------+-------------------------------+
+12 rows in set (0.024 sec)
+
+----------------------------
+END OF INNODB MONITOR OUTPUT
+============================
