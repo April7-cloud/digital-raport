@@ -92,7 +92,7 @@ if (!function_exists('redirect')) {
 }
 
 /**
- * Sanitize user input
+ * Sanitize user inpu
  * 
  * @param string $input Input to sanitize
  * @return string Sanitized input
